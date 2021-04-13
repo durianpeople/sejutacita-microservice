@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+
+  users:
+    build:
+      context: services/users
+      dockerfile: Dockerfile
+      target: dev
+    tty: true
+    working_dir: /home/node/app
+    volumes:
+      - ./services/users:/home/node/app
+      - ./services/users/node_modules
+    ports:
+      - 3001:3000
+      - 9291:9229
+
+  auth:
+    build:
+      context: services/auth
+      dockerfile: Dockerfile
+      target: dev
+    tty: true
+    working_dir: /home/node/app
+    volumes:
+      - ./services/auth:/home/node/app
+      - ./services/auth/node_modules
+    ports:
+      - 3002:3000
+      - 9292:9229
+
+  mongo:
+    build:
+      context: mongo
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+    - ./mongo/init:/docker-entrypoint-initdb.d
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
