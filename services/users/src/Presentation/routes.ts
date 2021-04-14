@@ -10,3 +10,4 @@ router.get('/', index_controller.index)
 
 router.post('/create', container.resolve(UserController).create)
 router.post('/find', container.resolve(UserController).find)
+router.get('/list', container.resolve(UserController).list)

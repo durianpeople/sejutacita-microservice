@@ -5,6 +5,21 @@ import {MongoClient} from "mongodb";
 import {Password} from "../../Core/Domain/Model/Password";
 
 export class UserRepository implements UserRepositoryInterface {
+    async getAll(): Promise<Array<User>> {
+        if (!this.client) {
+            await this.initClient()
+        }
+
+        let query = this.client?.db('users').collection('users').find()
+        if (query) {
+            let records = await query;
+            return records.map(function (record) {
+                return new User(new Uuid(record.id), record.username, new Password(record.password_hash))
+            }).toArray()
+        }
+        return [];
+    }
+
     private client: MongoClient | undefined;
 
     private async initClient() {

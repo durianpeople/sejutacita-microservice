@@ -5,6 +5,7 @@ import {CreateUserService} from "../../Core/Application/CreateUser/CreateUserSer
 import {container} from "tsyringe";
 import {FindUserRequest} from "../../Core/Application/FindUser/FindUserRequest";
 import {FindUserService} from "../../Core/Application/FindUser/FindUserService";
+import {ListUserService} from "../../Core/Application/ListUser/ListUserService";
 
 export class UserController extends Controller {
     create(request: Request, response: Response) {
@@ -21,6 +22,16 @@ export class UserController extends Controller {
         let service: FindUserService = container.resolve(FindUserService)
 
         service.execute(req).then((result) => {
+            return response.json(result)
+        }).catch(() => {
+            return response.status(500);
+        })
+    }
+
+    list(request: Request, response: Response) {
+        let service: ListUserService = container.resolve(ListUserService)
+
+        service.execute().then((result) => {
             return response.json(result)
         }).catch(() => {
             return response.status(500);
