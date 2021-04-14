@@ -10,6 +10,7 @@ import {UpdateUserRequest} from "../../Core/Application/UpdateUser/UpdateUserReq
 import {UpdateUserService} from "../../Core/Application/UpdateUser/UpdateUserService";
 import {DeleteUserRequest} from "../../Core/Application/DeleteUser/DeleteUserRequest";
 import {DeleteUserService} from "../../Core/Application/DeleteUser/DeleteUserService";
+import {verify} from "jsonwebtoken";
 
 export class UserController extends Controller {
     create(request: Request, response: Response) {
@@ -22,7 +23,14 @@ export class UserController extends Controller {
     }
 
     find(request: Request, response: Response) {
-        let req: FindUserRequest = new FindUserRequest(request.body.id);
+        if (!request.get('Token')) {
+            throw Error('Token undefined');
+        }
+
+        let account = verify(<string>request.get('Token'), <string>process.env.JWT_SECRET)
+
+        // @ts-ignore
+        let req: FindUserRequest = new FindUserRequest(account.id);
         let service: FindUserService = container.resolve(FindUserService)
 
         service.execute(req).then((result) => {
