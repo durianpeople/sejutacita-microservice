@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-
   users:
     build:
       context: services/users
@@ -38,6 +37,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: apidb
     volumes:
     - ./mongo/init:/docker-entrypoint-initdb.d
 
@@ -49,3 +49,10 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
+
+  rabbitmq:
+    image: rabbitmq:3.8.14
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: root
