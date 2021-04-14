@@ -1,0 +1,156 @@
+openapi: 3.0.3
+info:
+  title: SejutaCita Microservices
+  description: SejutaCita Microservices
+  version: 1.0.0
+servers:
+  - url: 'https'
+paths:
+  /login:
+    post:
+      summary: Login
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Returned when the operation succeeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jwt:
+                    type: string
+                    format: JWT
+                    description: JWT of account
+        500:
+          description: Returned when the operation failed unexpectedly
+
+  /find:
+    get:
+      summary: Find currently logged in user
+      parameters:
+        - in: header
+          name: Token
+          description: JWT to authenticate to a resource
+          required: true
+          schema:
+            type: string
+            format: JWT
+      responses:
+        200:
+          description: Returned when the operation succeeded
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                        description: id of user
+                      username:
+                        type: string
+                        description: username of user
+                  - type: 'null'
+        500:
+          description: Returned when the operation failed unexpectedly
+
+  /create:
+    post:
+      summary: Create new user
+      parameters:
+        - in: header
+          name: Token
+          description: JWT to authenticate to a resource. Only admin is allowed
+          required: true
+          schema:
+            type: string
+            format: JWT
+      responses:
+        201:
+          description: Returned when the operation succeeded
+  /list:
+    get:
+      summary: Get list of users
+      parameters:
+        - in: header
+          name: Token
+          description: JWT to authenticate to a resource. Only admin is allowed
+          required: true
+          schema:
+            type: string
+            format: JWT
+      responses:
+        200:
+          description: Returned when the operation succeeded
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    username:
+                      type: string
+        500:
+          description: Returned when the operation failed unexpectedly
+  /update:
+    put:
+      summary: Update user
+      parameters:
+        - in: header
+          name: Token
+          description: JWT to authenticate to a resource. Only admin is allowed
+          required: true
+          schema:
+            type: string
+            format: JWT
+        - in: path
+          name: id
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Returned when the operation succeeded
+        404:
+          description: Returned when user id not found
+        500:
+          description: Returned when the operation failed unexpectedly
+
+  /delete:
+    delete:
+      summary: Delete user
+      parameters:
+        - in: header
+          name: Token
+          description: JWT to authenticate to a resource. Only admin is allowed
+          required: true
+          schema:
+            type: string
+            format: JWT
+        - in: path
+          name: id
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Returned when the operation succeeded
+        404:
+          description: Returned when user id not found
+        500:
+          description: Returned when the operation failed unexpectedly
