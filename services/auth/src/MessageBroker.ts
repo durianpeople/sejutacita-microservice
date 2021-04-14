@@ -22,8 +22,8 @@ export class MessageBroker {
             console.log('Channel ready')
             this.channel?.assertExchange('broadcast', 'fanout');
 
-            this.channel?.assertQueue('users', {exclusive: true, durable: true});
-            this.channel?.bindQueue('users', 'broadcast', '')
+            this.channel?.assertQueue('auth', {exclusive: true, durable: true});
+            this.channel?.bindQueue('auth', 'broadcast', '')
 
             this.consume()
         });
@@ -57,7 +57,7 @@ export class MessageBroker {
     }
 
     broadcast(event_name: string, message: any) {
-        this.channel?.publish('broadcast', 'users', message, {
+        this.channel?.publish('broadcast', 'auth', message, {
             headers: {
                 event_name: event_name
             }
@@ -68,7 +68,7 @@ export class MessageBroker {
         if (this.channel)
             console.log('Consumer ready')
 
-        this.channel?.consume('users', async (message) => {
+        this.channel?.consume('auth', async (message) => {
             if (message) {
                 let listener = this.listeners.get(message.properties.headers.event_name);
                 if (listener) {
