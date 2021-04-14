@@ -4,7 +4,7 @@ info:
   description: SejutaCita Microservices
   version: 1.0.0
 servers:
-  - url: 'http://10.142.0.4'
+  - url: 'http://10.142.0.4:3001'
 paths:
   /login:
     post:
