@@ -5,7 +5,6 @@ services:
     build:
       context: services/users
       dockerfile: Dockerfile
-      target: prod
     tty: true
     working_dir: /home/node/app
     volumes:
