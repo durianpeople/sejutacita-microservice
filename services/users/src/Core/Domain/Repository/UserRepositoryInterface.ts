@@ -7,5 +7,7 @@ export interface UserRepositoryInterface {
     persist(user: User): Promise<void>;
 
     getAll(): Promise<Array<User>>
+
+    delete(user: User): Promise<void>;
 }
 

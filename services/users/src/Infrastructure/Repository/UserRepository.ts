@@ -5,6 +5,20 @@ import {MongoClient} from "mongodb";
 import {Password} from "../../Core/Domain/Model/Password";
 
 export class UserRepository implements UserRepositoryInterface {
+    async delete(user: User): Promise<void> {
+        if (!this.client) {
+            await this.initClient()
+        }
+
+        this.client?.db().collection('users').deleteMany({id: user.id.uuid}, (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log("deleted?")
+            }
+        })
+    }
+
     async getAll(): Promise<Array<User>> {
         if (!this.client) {
             await this.initClient()
@@ -38,6 +52,8 @@ export class UserRepository implements UserRepositoryInterface {
         let query = this.client?.db('users').collection('users').findOne({id: id.uuid})
         if (query) {
             let record = await query;
+            if (!record)
+                return null;
             user = new User(new Uuid(record.id), record.username, new Password(record.password_hash))
         }
 
