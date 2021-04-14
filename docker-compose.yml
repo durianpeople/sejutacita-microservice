@@ -15,20 +15,6 @@ services:
       - 3001:3000
       - 9291:9229
 
-  auth:
-    build:
-      context: services/auth
-      dockerfile: Dockerfile
-      target: prod
-    tty: true
-    working_dir: /home/node/app
-    volumes:
-      - ./services/auth:/home/node/app
-      - ./services/auth/node_modules
-    ports:
-      - 3002:3000
-      - 9292:9229
-
   mongo:
     build:
       context: mongo
