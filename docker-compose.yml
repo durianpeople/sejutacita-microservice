@@ -5,7 +5,7 @@ services:
     build:
       context: services/users
       dockerfile: Dockerfile
-      target: dev
+      target: prod
     tty: true
     working_dir: /home/node/app
     volumes:
@@ -19,7 +19,7 @@ services:
     build:
       context: services/auth
       dockerfile: Dockerfile
-      target: dev
+      target: prod
     tty: true
     working_dir: /home/node/app
     volumes:
@@ -37,7 +37,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: apidb
     volumes:
     - ./mongo/init:/docker-entrypoint-initdb.d
 

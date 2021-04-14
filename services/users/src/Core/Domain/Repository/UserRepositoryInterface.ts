@@ -2,7 +2,8 @@ import {Uuid} from "../Model/Uuid";
 import {User} from "../Model/User";
 
 export interface UserRepositoryInterface {
-    findUser(id: Uuid): User | null;
+    findUser(id: Uuid): Promise<User | null>;
 
-    persist(user: User): void;
+    persist(user: User): Promise<void>;
 }
+
