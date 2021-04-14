@@ -2,6 +2,7 @@ import {Channel, connect, Connection, Message} from "amqplib/callback_api";
 import {singleton} from "tsyringe";
 import {retry} from "ts-retry-promise";
 
+
 @singleton()
 export class MessageBroker {
     private channel: Channel | null;
@@ -64,20 +65,24 @@ export class MessageBroker {
     }
 
     private consume() {
-        let channel: Channel | null = this.channel;
-        if (channel)
+        if (this.channel)
             console.log('Consumer ready')
 
-        channel?.consume('users', async function (message) {
-
+        this.channel?.consume('users', async (message) => {
             if (message) {
-                channel?.ack(message)
-
+                let listener = this.listeners.get(message.properties.headers.event_name);
+                if (listener) {
+                    listener(message)
+                }
+                this.channel?.ack(message)
             }
         })
     }
 
     listen(event_name: string, callback: (message: Message) => void) {
+        if (this.listeners.has(event_name)) {
+            throw new Error('Event is already listened');
+        }
         this.listeners.set(event_name, callback);
     }
 }
