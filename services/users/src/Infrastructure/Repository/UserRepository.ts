@@ -5,6 +5,23 @@ import {MongoClient} from "mongodb";
 import {Password} from "../../Core/Domain/Model/Password";
 
 export class UserRepository implements UserRepositoryInterface {
+    async findByUsername(username: string): Promise<User | null> {
+        if (!this.client) {
+            await this.initClient()
+        }
+
+        let user: User | null = null;
+
+        let query = this.client?.db('users').collection('users').findOne({username: username})
+        if (query) {
+            let record = await query;
+            if (!record)
+                return null;
+            user = new User(new Uuid(record.id), record.username, new Password(record.password_hash))
+        }
+
+        return user;
+    }
     async delete(user: User): Promise<void> {
         if (!this.client) {
             await this.initClient()

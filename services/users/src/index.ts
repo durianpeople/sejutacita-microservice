@@ -7,9 +7,7 @@ import {container} from "tsyringe";
 import init_messages from "./messages";
 import bodyParser from "body-parser";
 
-env_config({
-    path: '../.env'
-})
+env_config()
 
 init_dependencies(container)
 init_messages(container)

@@ -9,5 +9,7 @@ export interface UserRepositoryInterface {
     getAll(): Promise<Array<User>>
 
     delete(user: User): Promise<void>;
+
+    findByUsername(username: string): Promise<User | null>;
 }
 
