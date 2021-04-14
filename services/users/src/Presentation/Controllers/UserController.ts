@@ -6,15 +6,17 @@ import {container} from "tsyringe";
 import {FindUserRequest} from "../../Core/Application/FindUser/FindUserRequest";
 import {FindUserService} from "../../Core/Application/FindUser/FindUserService";
 import {ListUserService} from "../../Core/Application/ListUser/ListUserService";
+import {UpdateUserRequest} from "../../Core/Application/UpdateUser/UpdateUserRequest";
+import {UpdateUserService} from "../../Core/Application/UpdateUser/UpdateUserService";
 
 export class UserController extends Controller {
     create(request: Request, response: Response) {
         let req: CreateUserRequest = new CreateUserRequest(request.body.username, request.body.password);
         let service: CreateUserService = container.resolve(CreateUserService);
 
-        service.execute(req);
-
-        return response.status(200)
+        service.execute(req).then(() => {
+            response.sendStatus(201)
+        });
     }
 
     find(request: Request, response: Response) {
@@ -22,9 +24,9 @@ export class UserController extends Controller {
         let service: FindUserService = container.resolve(FindUserService)
 
         service.execute(req).then((result) => {
-            return response.json(result)
+            response.json(result)
         }).catch(() => {
-            return response.status(500);
+            response.sendStatus(500);
         })
     }
 
@@ -32,9 +34,23 @@ export class UserController extends Controller {
         let service: ListUserService = container.resolve(ListUserService)
 
         service.execute().then((result) => {
-            return response.json(result)
+            response.json(result)
         }).catch(() => {
-            return response.status(500);
+            response.sendStatus(500);
+        })
+    }
+
+    update(request: Request, response: Response) {
+        let req: UpdateUserRequest = new UpdateUserRequest(request.body.id, request.body.username, request.body.old_password ?? null, request.body.new_password ?? null);
+        let service: UpdateUserService = container.resolve(UpdateUserService)
+
+        service.execute(req).then(() => {
+            response.sendStatus(200)
+        }).catch((err) => {
+            if (err.code == UpdateUserService.USER_NOT_FOUND) {
+                response.sendStatus(404);
+            }
+            response.sendStatus(500);
         })
     }
 }

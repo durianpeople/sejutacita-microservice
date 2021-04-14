@@ -49,10 +49,10 @@ export class UserRepository implements UserRepositoryInterface {
             await this.initClient()
         }
 
-        this.client?.db('users').collection('users').insertOne({
+        this.client?.db('users').collection('users').replaceOne({id: user.id.uuid}, {
             id: user.id.uuid,
             username: user.username,
             password_hash: user.password.password_hash
-        })
+        }, {upsert: true})
     }
 }

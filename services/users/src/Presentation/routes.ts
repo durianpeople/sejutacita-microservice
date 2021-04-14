@@ -9,5 +9,6 @@ let index_controller: IndexController = container.resolve(IndexController)
 router.get('/', index_controller.index)
 
 router.post('/create', container.resolve(UserController).create)
-router.post('/find', container.resolve(UserController).find)
+router.get('/find', container.resolve(UserController).find)
 router.get('/list', container.resolve(UserController).list)
+router.put('/update', container.resolve(UserController).update)

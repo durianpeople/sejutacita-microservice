@@ -11,8 +11,8 @@ export class CreateUserService {
         this.user_repository = user_repository;
     }
 
-    execute(request: CreateUserRequest) {
+    async execute(request: CreateUserRequest) {
         let user: User = User.create(request.username, request.password);
-        this.user_repository.persist(user);
+        await this.user_repository.persist(user);
     }
 }
